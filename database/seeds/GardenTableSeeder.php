@@ -12,6 +12,6 @@ class GardenTableSeeder extends Seeder
      */
     public function run()
     {
-        factory(Garden::class, 10)->create();
+        factory(Garden::class, 1)->create();
     }
 }
