@@ -3,6 +3,9 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\User;
+use Illuminate\Http\Request;
+use Illuminate\Validation\Validator;
 
 class AuthController extends Controller
 {
@@ -13,7 +16,7 @@ class AuthController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('auth:api', ['except' => ['login']]);
+        $this->middleware('auth:api', ['except' => ['login','register']]);
     }
 
     /**
@@ -25,22 +28,23 @@ class AuthController extends Controller
     public function register(Request $request)
     {
         //validate incoming request
-        $this->validate($request, [
+       $valid=$this->getValidationFactory()->make($request->all(),[
             'firstname' => 'required|string',
             'lastname' => 'required|string',
             'email' => 'required|email|unique:users',
-            'password' => 'required|confirmed',
+            'password' => 'required',
         ]);
+       if($valid->fails()) {
+           return response()->json($valid->messages(), 200);
+       }
 
         try {
-
-            $user = new User;
+            $user = new User();
             $user->firstname = $request->input('firstname');
             $user->lastname = $request->input('lastname');
             $user->email = $request->input('email');
             $plainPassword = $request->input('password');
             $user->password = app('hash')->make($plainPassword);
-
             $user->save();
 
             //return successful response
@@ -74,7 +78,7 @@ class AuthController extends Controller
      */
     public function me()
     {
-        return response()->json(auth()->user());
+        return response()->json(["user" => auth()->user()]);
     }
 
     /**

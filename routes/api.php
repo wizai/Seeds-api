@@ -18,14 +18,18 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 });
 
 Route::middleware('api')->prefix('auth')->namespace('Auth')->group(function() {
-    Route::post('login', 'AuthController@login');
     Route::post('logout', 'AuthController@logout');
     Route::post('refresh', 'AuthController@refresh');
     Route::post('me', 'AuthController@me');
 });
-//Route::middleware('auth:api')->group(function() {
+Route::prefix('auth')->namespace('Auth')->group(function() {
+    Route::post('register', 'AuthController@register');
+    Route::post('login', 'AuthController@login');
+});
+
+Route::middleware('auth:api')->group(function() {
     Route::apiResource('garden', 'GardenController');
     Route::apiResource('plant', 'PlantController');
     Route::post('add-plant', 'PlantController@addPlant');
     Route::post('remove-plant', 'PlantController@removePlant');
-//});
+});

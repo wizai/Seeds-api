@@ -39,7 +39,8 @@ class PlantController extends Controller
      */
     public function show(Plant $plant)
     {
-        return new PlantResource($plant);
+        //return new PlantResource($plant);
+        return $plant;
     }
 
     /**

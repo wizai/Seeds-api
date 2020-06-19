@@ -39,7 +39,8 @@ class GardenController extends Controller
      */
     public function show(Garden $garden)
     {
-        return new GardenResource($garden);
+        // return new GardenResource($garden);
+        return $garden;
     }
 
     /**
